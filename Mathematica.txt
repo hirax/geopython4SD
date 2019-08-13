@@ -1,0 +1,17 @@
+earthquake = {#["Magnitude"]/6, #["Position"], #["Depth"]} & /@ 
+   Values@EarthquakeData[
+     Rectangle[{137 - 10, 35 - 10}, {137 + 10, 35 + 10}], 5]; 
+
+img = Image@GeoGraphics[
+   {Hue[#1], Opacity[0.3], PointSize[0.02 #1], Point[#2]}
+     & @@@ earthquake, 
+   GeoRange -> {{35 - 10, 35 + 10}, {137 - 10, 137 + 10}}]
+
+earthquake = DeleteMissing[earthquake, 1, Infinity];
+
+data = Flatten@({(GeoPositionXYZ@#[[2]])[[1]] - {0, 0, 
+         1000*#[[3]][[1]]}
+       , #[[1]]}) & /@ (earthquake);
+
+Export["/Users/jun/Downloads/eq.csv", data]
+
